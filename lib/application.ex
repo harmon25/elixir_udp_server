@@ -9,7 +9,7 @@ defmodule LogServer do
         worker(LogServer.Server, [&__MODULE__.emit/3, Application.get_env(:log_server, :port)] )
       ]
     opts = [strategy: :one_for_one, name: LogServer.Supervisor]
-    
+
     Supervisor.start_link(children, opts)
   end
 
