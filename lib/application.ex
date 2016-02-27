@@ -3,7 +3,14 @@ defmodule LogServer do
   require Logger
  
   def start(_type , _args) do
-    LogServer.Supervisor.start_link(&__MODULE__.emit/3, Application.get_env(:log_server, :port) )
+    import Supervisor.Spec, warn: false
+
+    children = [
+        worker(LogServer.Server, [&__MODULE__.emit/3, Application.get_env(:log_server, :port)] )
+      ]
+    opts = [strategy: :one_for_one, name: LogServer.Supervisor]
+    
+    Supervisor.start_link(children, opts)
   end
 
   def emit(ip, fromport, packet) do
