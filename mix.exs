@@ -14,7 +14,7 @@ defmodule LogServer.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [env: [LogServer: :log_server], applications: [:logger]]
+    [applications: [:logger], mod: {LogServer, []}, env: [port: 1514]]
   end
 
   # Dependencies can be Hex packages:
