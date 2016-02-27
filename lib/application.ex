@@ -2,8 +2,8 @@ defmodule LogServer do
   use Application 
   
   # start app, :normal type, LogServer.Listener passed all the way through as args
-  def start(_type \\ :normal, args \\ %LogServer.Listener{handler: &__MODULE__.emit/3}) do
-  	#start_link runs this module emit function, as the handler when a UDP packet is recieved
+  def start(_type \\ :normal, args \\ &__MODULE__.emit/3) do
+  	#start_link runs this modules emit function, as the default handler when a UDP packet is recieved
     LogServer.Supervisor.start_link(args)
   end
 

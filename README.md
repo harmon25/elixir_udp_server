@@ -1,7 +1,7 @@
 # LogServer
-- Supervised Genserver running a UDP server
-- can specify which port to listen on, defaults to 1514
-
+- Elixir Application module which used to start a supervised UDP Server
+- accepts a handler function and port as paramters 
+ 
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
