@@ -4,8 +4,8 @@ defmodule LogServer.Supervisor do
   @doc "Given an arity-3 handler function and an optional listen port, supervise a server
   which calls the handler with (ip, from_port, packet) for UDP packets received on that
   port."
-  def start_link(handler, port \\ %LogServer.Listener{}.port) do
-    Supervisor.start_link(__MODULE__, [handler, port])
+  def start_link(%LogServer.Listener{port: _port, handler: _handler} = state) do
+    Supervisor.start_link(__MODULE__, [state])
   end
 
   def init(params) do
