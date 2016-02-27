@@ -1,6 +1,6 @@
-defmodule LogServerTest do
+defmodule UDPServerTest do
   use ExUnit.Case
-  doctest LogServer
+  doctest UDPServer
 
   test "the truth" do
     assert 1 + 1 == 2
