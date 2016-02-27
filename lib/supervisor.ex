@@ -5,7 +5,7 @@ defmodule LogServer.Supervisor do
   which calls the handler with (ip, from_port, packet) for UDP packets received on that
   port."
   def start_link(handler, port \\ %LogServer.Listener{}.port ) do
-    Supervisor.start_link(__MODULE__, [handler, port])
+    Supervisor.start_link(__MODULE__, [handler, port], name: __MODULE__)
   end
 
   def init(params) do

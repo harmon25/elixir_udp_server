@@ -3,7 +3,7 @@ defmodule LogServer.Server do
 
   # if port is not passed to LogServer.Supervisor.start_link use defauult struct port : 1514
   def start_link(handler, port) do
-    GenServer.start_link(__MODULE__, [%LogServer.Listener{handler: handler, port: port}])
+    GenServer.start_link(__MODULE__, [%LogServer.Listener{handler: handler, port: port}], name: __MODULE__)
   end
 
   def init([%LogServer.Listener{} = state]) do
