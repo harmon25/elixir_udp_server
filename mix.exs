@@ -1,11 +1,22 @@
-defmodule LogServer.Mixfile do
+defmodule UDPServer.Mixfile do
   use Mix.Project
 
   def project do
-    [apps_path: "apps",
+    [app: :udp_server,
+     version: "0.0.1",
+     elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
+  end
+
+  # Configuration for the OTP application
+  #
+  # Type "mix help compile.app" for more information
+  def application do
+    [applications: [:logger],
+     mod: {UDPServer, []},
+    env: [port: 1514]]
   end
 
   # Dependencies can be Hex packages:
@@ -16,10 +27,11 @@ defmodule LogServer.Mixfile do
   #
   #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
   #
-  # Type "mix help deps" for more examples and options.
+  # To depend on another app inside the umbrella:
   #
-  # Dependencies listed here are available only for this project
-  # and cannot be accessed from applications inside the apps folder
+  #   {:myapp, in_umbrella: true}
+  #
+  # Type "mix help deps" for more examples and options
   defp deps do
     []
   end
