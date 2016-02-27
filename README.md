@@ -1,6 +1,5 @@
 # LogServer
-- Elixir Application module which used to start a supervised UDP Server
-- accepts a handler function and port as paramters 
+- Elixir Application module used to start a supervised UDP Server on a user defined port
  
 ## Installation
 
