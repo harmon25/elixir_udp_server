@@ -49,6 +49,14 @@ defmodule UDPServer do
     :ok = :gen_udp.close(socket)
   end
 
+  def count(pid) do
+    GenServer.call(pid, :count)
+  end
+
+  def handle_call(:count, _from, state) do
+    {:reply, state.count, state}
+  end
+
   def handle_info({:udp, socket, ip, fromport, packet}, %State{socket: socket, handler: {mod, fun}} = state) do
     new_count = state.count + 1
     apply mod, fun, [%Response{ip: format_ip(ip), fromport: fromport, packet: String.strip(packet)}]
