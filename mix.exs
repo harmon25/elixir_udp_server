@@ -1,8 +1,8 @@
-defmodule LogServer.Mixfile do
+defmodule UDPServer.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :log_server,
+    [app: :udp_server,
      version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,

@@ -1,6 +1,6 @@
-defmodule LogServer.Listener do
+defmodule UDPServer.State do
   @doc ~S"""
-  Struct used for LogServer.Server state
+  UDPServer State:
   port :: integer
   count :: integer
   handler :: function
@@ -10,7 +10,7 @@ defmodule LogServer.Listener do
   @type t :: %__MODULE__{port: integer, ip: tuple, handler: tuple, socket: reference, count: integer}
 end
 
-defmodule LogServer.Response do
+defmodule UDPServer.Response do
   @doc ~S"""
   Struct for UDP response packet
   ip :: String.t
@@ -21,18 +21,18 @@ defmodule LogServer.Response do
   @type t :: %__MODULE__{ip: String.t, fromport: integer, packet: String.t}
 end
 
-defmodule LogServer do
+defmodule UDPServer do
   use GenServer
-  alias LogServer.Listener
-  alias LogServer.Response
+  alias UDPServer.State
+  alias UDPServer.Response
 
   def start_link() do
-    {mod, fun} = Application.get_env :log_server, :log_handler, {__MODULE__, :default_handler}
-    {ip, port} = {Application.get_env(:log_server, :ip, {127,0,0,1}), Application.get_env(:log_server, :port, 1514)}
-    GenServer.start_link(__MODULE__, [%Listener{handler: {mod,fun}, ip: ip, port: port}], name: __MODULE__)
+    {mod, fun} = Application.get_env :udp_server, :udp_handler, {__MODULE__, :default_handler}
+    {ip, port} = {Application.get_env(:udp_server, :ip, {127,0,0,1}), Application.get_env(:udp_server, :port, 1514)}
+    GenServer.start_link(__MODULE__, [%State{handler: {mod,fun}, ip: ip, port: port}], name: __MODULE__)
   end
 
-  def init([%Listener{} = state]) do
+  def init([%State{} = state]) do
     require Logger
     {:ok, socket} = :gen_udp.open(state.port, [:binary, :inet,
                                                {:ip, state.ip},
@@ -43,16 +43,16 @@ defmodule LogServer do
     {:ok, %{state | socket: socket, port: port}}
   end
 
-  def terminate(_reason, %Listener{socket: socket} = state) when socket != nil do
+  def terminate(_reason, %State{socket: socket} = state) when socket != nil do
     require Logger
     Logger.info("closing port #{state.port}")
     :ok = :gen_udp.close(socket)
   end
 
-  def handle_info({:udp, socket, ip, fromport, packet}, %Listener{socket: socket, handler: {mod, fun}} = state) do
+  def handle_info({:udp, socket, ip, fromport, packet}, %State{socket: socket, handler: {mod, fun}} = state) do
     new_count = state.count + 1
     apply mod, fun, [%Response{ip: format_ip(ip), fromport: fromport, packet: String.strip(packet)}]
-    {:noreply, %Listener{state | count: new_count}}
+    {:noreply, %State{state | count: new_count}}
   end
 
   def default_handler(%Response{} = response) do

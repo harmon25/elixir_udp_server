@@ -10,7 +10,7 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-config :log_server, 
+config :udp_server, 
 port: 1514,
 ip: {127,0,0,1}
 #
