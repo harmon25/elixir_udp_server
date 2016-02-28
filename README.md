@@ -17,6 +17,6 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
   1. Add log_server to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:log_server, git: "https://github.com/harmon25/elixir_log_server.git"}]
+          [{:udp_server, git: "https://github.com/harmon25/elixir_udp_server.git"}]
         end
 
