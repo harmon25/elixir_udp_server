@@ -1,5 +1,14 @@
 # LogServer
-- Elixir Application module used to start a supervised UDP Server on a user defined port
+- Elixir Application module used to start a GenServer based UDP Server on a user defined port
+- can pass log handler callback as `:log_handler` application environment config
+
+### Example config
+```
+	config :log_server,
+	ip: {127,0,0,1},
+	port: 1514,
+	log_handler: {module, function}
+```
  
 ## Installation
 
@@ -9,11 +18,5 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
         def deps do
           [{:log_server, git: "https://github.com/harmon25/elixir_log_server.git"}]
-        end
-
-  2. Ensure log_server is started before your application:
-
-        def application do
-          [applications: [:log_server]]
         end
 

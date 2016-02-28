@@ -10,11 +10,13 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :udp_server, key: :value
+config :log_server, 
+port: 1514,
+ip: {127,0,0,1}
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:udp_server, :key)
+#     Application.get_env(:log_server, :key)
 #
 # Or configure a 3rd-party app:
 #

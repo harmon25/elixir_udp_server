@@ -6,8 +6,8 @@ defmodule LogServer.Listener do
   handler :: function
   socket :: %Socket
   """
-  defstruct port: nil, handler: nil, socket: nil, count: 0
-  @type t :: %__MODULE__{port: integer, handler: tuple, socket: reference, count: integer}
+  defstruct port: nil, ip: {nil,nil,nil,nil} ,handler: {nil, nil}, socket: nil, count: 0
+  @type t :: %__MODULE__{port: integer, ip: tuple, handler: tuple, socket: reference, count: integer}
 end
 
 defmodule LogServer.Response do
@@ -28,14 +28,14 @@ defmodule LogServer do
 
 	def start_link() do
 		{mod, fun} = Application.get_env :log_server, :log_handler, {__MODULE__, :default_handler}
-		port = Application.get_env :log_server, :port, 1514
-		GenServer.start_link(__MODULE__, [%Listener{handler: {mod,fun}, port: port}], name: __MODULE__)
+		{ip, port} = {Application.get_env(:log_server, :ip, {127,0,0,1}), Application.get_env(:log_server, :port, 1514)}
+		GenServer.start_link(__MODULE__, [%Listener{handler: {mod,fun}, ip: ip, port: port}], name: __MODULE__)
 	end
 
 	def init([%Listener{} = state]) do
   	require Logger
     {:ok, socket} = :gen_udp.open(state.port, [:binary, :inet,
-                                               {:ip, {127,0,0,1}},
+                                               {:ip, state.ip},
                                                {:active, true}])
     {:ok, port} = :inet.port(socket)
     Logger.info("listening on port #{port}")
