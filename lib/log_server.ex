@@ -22,18 +22,18 @@ defmodule LogServer.Response do
 end
 
 defmodule LogServer do
-	use GenServer
-	alias LogServer.Listener
-	alias LogServer.Response
+  use GenServer
+  alias LogServer.Listener
+  alias LogServer.Response
 
-	def start_link() do
-		{mod, fun} = Application.get_env :log_server, :log_handler, {__MODULE__, :default_handler}
-		{ip, port} = {Application.get_env(:log_server, :ip, {127,0,0,1}), Application.get_env(:log_server, :port, 1514)}
-		GenServer.start_link(__MODULE__, [%Listener{handler: {mod,fun}, ip: ip, port: port}], name: __MODULE__)
-	end
+  def start_link() do
+    {mod, fun} = Application.get_env :log_server, :log_handler, {__MODULE__, :default_handler}
+    {ip, port} = {Application.get_env(:log_server, :ip, {127,0,0,1}), Application.get_env(:log_server, :port, 1514)}
+    GenServer.start_link(__MODULE__, [%Listener{handler: {mod,fun}, ip: ip, port: port}], name: __MODULE__)
+  end
 
-	def init([%Listener{} = state]) do
-  	require Logger
+  def init([%Listener{} = state]) do
+    require Logger
     {:ok, socket} = :gen_udp.open(state.port, [:binary, :inet,
                                                {:ip, state.ip},
                                                {:active, true}])
@@ -44,7 +44,7 @@ defmodule LogServer do
   end
 
   def terminate(_reason, %Listener{socket: socket} = state) when socket != nil do
-  	require Logger
+    require Logger
     Logger.info("closing port #{state.port}")
     :ok = :gen_udp.close(socket)
   end
@@ -55,18 +55,13 @@ defmodule LogServer do
     {:noreply, %Listener{state | count: new_count}}
   end
 
-	def default_handler(%Response{} = response) do
-		require Logger
-		Logger.info("#{response.ip}:#{response.fromport} sent: #{response.packet}")
-	end
+  def default_handler(%Response{} = response) do
+    require Logger
+    Logger.info("#{response.ip}:#{response.fromport} sent: #{response.packet}")
+  end
 
-	  #ip is passed as a tuple one int each octet {127,0,0,1}
+  #ip is passed as a tuple one int each octet {127,0,0,1}
   defp format_ip ({a, b, c, d}) do
     "#{a}.#{b}.#{c}.#{d}"
   end
-
-
-
-
-
 end
